@@ -13,7 +13,7 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name(
      'https://www.googleapis.com/auth/drive'])
 httpAuth = credentials.authorize(httplib2.Http())
 service = apiclient.discovery.build('sheets', 'v4', http = httpAuth)
-"""
+"""  Вывод данных из таблицы
 values = service.spreadsheets().values().get(
     spreadsheetId=spreadsheet_id,
     range='A1:E10',
@@ -22,6 +22,8 @@ pprint(values)
 exit()
 """
 
+""" Вставка/изменение данных в таблице """
+"""
 values = service.spreadsheets().values().batchUpdate(
     spreadsheetId=spreadsheet_id,
     body={
@@ -36,3 +38,35 @@ values = service.spreadsheets().values().batchUpdate(
         ]
     }
 ).execute()
+"""
+
+""" Удаление данных из таблицы """
+"""
+request_body = {
+    'requests': [
+        {
+            'deleteDimension': {
+                'range': {
+                    'dimension': 'ROWS',
+                    'startIndex': 0,
+                    'endIndex': 10
+                }
+            }
+        },
+        {
+            'deleteDimension': {
+                'range': {
+                    'dimension': 'COLUMNS',
+                    'startIndex': 0,
+                    'endIndex': 10
+                }
+            }
+        }
+    ]
+}
+values = service.spreadsheets().batchUpdate(
+    spreadsheetId=spreadsheet_id,
+    body=request_body
+).execute()
+"""
+
